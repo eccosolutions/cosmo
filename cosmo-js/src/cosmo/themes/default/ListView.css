@@ -1,0 +1,70 @@
+/* List view */
+#listViewContainer {
+    position: absolute;
+    display: none;
+    border-left: 2px solid #808080;
+    border-right: 1px solid #999;
+    overflow: hidden;
+}
+#listViewTable {
+    table-layout: fixed;
+    width: 100%;
+}
+#listViewTable .selectedItem {
+    background-color: #2873db;
+}
+.listViewHeaderCell {
+    color: #000;
+    font-weight: bold;
+    height: 15px;
+    line-height: 15px;
+    border-right: 1px solid #ddd;
+    background-image: url(images/tiling_horizontal.png);
+    background-position: 0px 0px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+}
+tr > .listViewHeaderCell:last-child {
+    border-right: 0px;
+}
+.listViewHeaderCellLit {
+    background-position: 0px -20px;
+}
+.listViewHeaderCellSel {
+    background-position: 0px -40px;
+}
+.listViewHeaderCellSelLit {
+    background-position: 0px -60px;
+    color: white;
+}
+.listViewDataCell {
+    height: 20px;
+    line-height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    vertical-align: top;
+    border-bottom: 1px solid #ddd;
+}
+.listViewTriageCell {
+    text-align: center;
+    font-size: 10px;
+}
+.listViewTriageNow {
+    color: #fff;
+    background-color: #3c0 !important;
+}
+.listViewTriageLater {
+    color: #fff;
+    background-color: #fc0 !important;
+}
+.listViewTriageDone {
+    color: #fff;
+    background-color: #545454 !important;
+}
+
+.ellipsis {
+    /* doesn't work with mozilla, but does with others */
+    text-overflow: ellipsis;
+}

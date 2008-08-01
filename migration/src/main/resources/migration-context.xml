@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+    Copyright 2006 Open Source Applications Foundation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<beans>
+
+    <bean id="zeroPointFiveToZeroPointSix"
+        class="org.osaf.cosmo.migrate.ZeroPointFiveToZeroPointSixMigration">
+    </bean>
+	
+    <bean id="zeroPointSixToZeroPointSixZeroOne"
+        class="org.osaf.cosmo.migrate.BasicSqlScriptMigration">
+        <property name="fromVersion">
+            <value>0.6.0</value>
+        </property>
+        <property name="toVersion">
+            <value>0.6.0.1</value>
+        </property>
+        <property name="supportedDialects">
+            <set>
+                <value>Derby</value>
+                <value>MySQL5</value>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="zeroPointSixZeroOneToZeroPointSixOne"
+        class="org.osaf.cosmo.migrate.ZeroPointSixZeroOneToZeroPointSixOneMigration">
+    </bean>
+	
+    <bean id="zeroPointSixOneToZeroPointSeven"
+        class="org.osaf.cosmo.migrate.ZeroPointSixOneToZeroPointSevenMigration">
+    </bean>
+    
+    <bean id="zeroPointSevenToZeroPointEight"
+        class="org.osaf.cosmo.migrate.ZeroPointSevenToZeroPointEightMigration">
+    </bean>
+    
+    <bean id="zeroPointEightToZeroPointNine"
+         class="org.osaf.cosmo.migrate.ZeroPointEightToZeroPointNineMigration">
+    </bean>
+    
+     <bean id="zeroPointNineToZeroPointTen"
+         class="org.osaf.cosmo.migrate.ZeroPointNineToZeroPointTenMigration">
+    </bean>
+    
+    <bean id="zeroPointTwelveToZeroPointThirteen"
+        class="org.osaf.cosmo.migrate.BasicSqlScriptMigration">
+        <property name="fromVersion">
+            <value>140</value>
+        </property>
+        <property name="toVersion">
+            <value>150</value>
+        </property>
+        <property name="supportedDialects">
+            <set>
+                <value>Derby</value>
+                <value>MySQL5</value>
+                <value>PostgreSQL</value>
+            </set>
+        </property>
+    </bean>
+    
+    <bean id="zeroPointFourteenToZeroPointFifteen"
+        class="org.osaf.cosmo.migrate.BasicSqlScriptMigration">
+        <property name="fromVersion">
+            <value>150</value>
+        </property>
+        <property name="toVersion">
+            <value>160</value>
+        </property>
+        <property name="supportedDialects">
+            <set>
+                <value>Derby</value>
+                <value>MySQL5</value>
+                <value>PostgreSQL</value>
+            </set>
+        </property>
+    </bean>
+
+</beans>

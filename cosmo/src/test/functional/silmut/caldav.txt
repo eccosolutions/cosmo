@@ -1,0 +1,7 @@
+Cosmo CalDAV tests
+
+http://wiki.osafoundation.org/bin/view/Projects/CosmoCaldav
+
+First, bring the framework environment
+
+	>>> from silmut import *

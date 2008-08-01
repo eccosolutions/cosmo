@@ -1,0 +1,321 @@
+<!--
+   Copyright 2005-2007 Open Source Applications Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+ 
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.osaf.cosmo</groupId>
+    <artifactId>osaf-server</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Chandler Server</name>
+    <url>http://chandlerproject.org</url>
+    <description>
+        The Chandler Server team is working on both the Chandler Server (CalDAV server), the Chandler Server Administrator
+        web interface and the end-user shared information management web application. Chandler Server is the software that
+        powers the Chandler Hub Sharing Service. The Chandler Server code is also available for download as a standalone
+        server.
+    </description>
+    <issueManagement>
+        <system>Bugzilla</system>
+        <url>https://bugzilla.osafoundation.org</url>
+    </issueManagement>
+    <ciManagement>
+        <system>Tinderbox2</system>
+        <url>http://builds.osafoundation.org/tinderbox/Cosmo/status.html</url>
+    </ciManagement>
+    <developers>
+        <developer>
+            <id>sprout</id>
+            <name>Ted Leung</name>
+            <email>twleung@osafoundation.org</email>
+            <roles>
+                <role>Project Manager</role>
+            </roles>
+            <organization>OSAF</organization>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <id>bcm</id>
+            <name>Brian Moseley</name>
+                <roles>
+                    <role>Server</role>
+                    <role>Architect</role>
+                    <role>Components</role>
+                </roles>
+            <organization>OSAF</organization>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <id>rletness</id>
+            <name>Randy Letness</name>
+                <roles>
+                    <role>Server</role>
+                    <role>Storage Layer</role>
+                </roles>
+            <organization>OSAF</organization>
+            <timezone>-4</timezone>
+        </developer>
+        <developer>
+            <id>mde</id>
+            <name>Matthew Eernisse</name>
+                <roles>
+                    <role>Client</role>
+                    <role>Hub Front-end</role>
+                </roles>
+            <organization>OSAF</organization>
+            <timezone>-4</timezone>
+        </developer>
+        <developer>
+            <id>br</id>
+            <name>Bobby Rullo</name>
+                <roles>
+                    <role>Server</role>
+                    <role>Components</role>
+                </roles>
+            <organization>OSAF</organization>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <id>tvachon</id>
+            <name>Travis Vachon</name>
+                <roles>
+                    <role>Server</role>
+                    <role>Admin Front-end</role>
+                </roles>
+            <organization>OSAF</organization>
+            <timezone>-5</timezone>
+        </developer>
+    </developers>
+    <mailingLists>
+        <mailingList>
+            <name>Cosmo Developers mailing list</name>
+            <subscribe>cosmo-dev-subscribe@lists.osafoundation.org</subscribe>
+            <unsubscribe>cosmo-dev-unsubscribe@lists.osafoundation.org</unsubscribe>
+            <post>cosmo-dev@lists.osafoundation.org</post>
+            <archive>http://lists.osafoundation.org/pipermail/cosmo-dev/</archive>
+        </mailingList>
+    </mailingLists>
+    <scm>
+        <connection>scm:svn:http://svn.osafoundation.org/server/cosmo/</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.osafoundation.org/svn/server/cosmo/</developerConnection>
+        <url>http://svn.osafoundation.org/server/cosmo/</url>
+    </scm>
+    <modules>
+        <module>cosmo</module>
+        <module>migration</module>
+        <module>snarf</module>
+    </modules>
+    <repositories>
+        <repository>
+            <id>osafoundation.org</id>
+            <name>OSAF's repository</name>
+            <layout>default</layout>
+            <url>http://builds.osafoundation.org/maven2</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>people.apache.org/m2-incubating-repository</id>
+            <name>Apache m2 incubating</name>
+            <layout>default</layout>
+            <url>http://people.apache.org/repo/m2-incubating-repository/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!--
+        <repository>
+            <id>modularity snapshots</id>
+            <name>Modularity Snapshot Repository</name>
+            <url>http://m2.modularity.net.au/snapshots</url>
+            <releases>
+              <enabled>false</enabled>
+            </releases>
+            <snapshots>
+              <enabled>true</enabled>
+              <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>modularity releases</id>
+            <name>Modularity Release Repository</name>
+            <url>http://m2.modularity.net.au/releases</url>
+            <releases>
+              <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>false</enabled>
+              <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        -->
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>jboss repository</id>
+            <name>JBoss Repository for Maven</name>
+            <url>http://repository.jboss.org/maven2/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Maven Snapshots</id>
+            <url>http://snapshots.maven.codehaus.org/maven2/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>osafoundation.org</id>
+            <name>OSAF's plugin repository</name>
+            <layout>default</layout>
+            <url>http://builds.osafoundation.org/maven2</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>osaf-m2</id>
+            <name>OSAF M2 Repository</name>
+            <url>scpexe://paniolo.osafoundation.org/www/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>osaf-m2</id>
+            <name>OSAF M2 Repository</name>
+            <url>scpexe://paniolo.osafoundation.org/www/maven2</url>
+        </snapshotRepository>
+        <site>
+            <id>osaf-site</id>
+            <url>scpexe://downloads.osafoundation.org/www/cosmo.osafoundation.org/docs</url>
+        </site>
+    </distributionManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.osaf.cosmo</groupId>
+                <artifactId>cosmo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osaf.cosmo</groupId>
+                <artifactId>migration</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osaf.cosmo</groupId>
+                <artifactId>snarf</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-clover-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <configuration>
+                    <generateHtml>true</generateHtml>
+                    <generatePdf>false</generatePdf>
+                    <generateXml>true</generateXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jxr-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <xmlOutput>false</xmlOutput>
+                    <xmlOutputDirectory>directory location of xml findbugs report</xmlOutputDirectory>
+                    <threshold>Normal</threshold>
+                    <effort>Max</effort>
+                    <onlyAnalyze>org.osaf.*</onlyAnalyze>
+                </configuration>
+            </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>1.5</targetJdk>
+                    <excludes>
+                        <exclude>**/*Bean.java</exclude>
+                        <exclude>**/generated/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.5</source>
+                        <target>1.5</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*TestCase.java</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

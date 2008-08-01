@@ -1,0 +1,17 @@
+{"params": {"id": "collectionDisplayAddCollectionButton"}, "method": "click"}
+{"params": {"id": "getValueInput"}, "method": "click"}
+{"params": {"text": "zeus", "id": "getValueInput"}, "method": "type"}
+{"params": {"id": "getValueSubmit"}, "method": "click"}
+{"params": {"milliseconds": 5000}, "method": "waits.sleep"}
+{"params": {"validator": "zeus", "id": "collectionSelectorContainer"}, "method": "asserts.assertText"}
+{"params": {"jsid": "cosmo.app.pim.collections.getLast().getUid()"}, "method": "extensions.clickClDialog"}
+{"params": {"timeout": 2000, "id": "collectionSharingDialog"}, "method": "waits.forElement"}
+{"params": {"id": "collectionSharingDialogInvite"}, "method": "click"}
+{"params": {"id": "collectionSharingDialogInviteSection"}, "method": "asserts.assertNode"}
+{"params": {"timeout": 2000, "id": "collectionSharingDialogReadOnlyInviteLink"}, "method": "waits.forElement"}
+{"params": {"timeout": 2000, "id": "collectionSharingDialogReadWriteInviteLink"}, "method": "waits.forElement"}
+{"params": {"validator": "zeus", "id": "collectionSharingDialogDisplayName"}, "method": "asserts.assertText"}
+{"params": {"id": "collectionSharingDialogDismiss"}, "method": "click"}
+{"params": {"id": "collectionDisplayRemoveCollectionButton"}, "method": "click"}
+{"params": {"timeout": "2000", "id": "cosmoModalConfirmYes"}, "method": "waits.forElement"}
+{"params": {"id": "cosmoModalConfirmYes"}, "method": "click"}

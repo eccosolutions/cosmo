@@ -1,0 +1,35 @@
+/** Verify unstamping eventness in list view works:
+ *    1) go to calendar view:
+ *    2) create recurring event
+ *    3) go to list view
+ *    4) unstamp eventness
+ *    5) verify (only) one event in item registry...
+**/
+
+//create the event 
+{"params": {"timeout": 15000, "id": "hourDiv0-930"}, "method": "waits.forElement"}
+{"params": {"id": "hourDiv0-930"}, "method": "doubleClick"}
+{"method": "waits.sleep", "params": {"milliseconds" : 1100}}
+
+//make it recurring, daily
+{"params": {"option": "Daily", "id": "detailViewRecurrenceSelector"},  "method": "select"}
+
+//save it
+{"params": {"id": "detailViewSaveButton"},  "method": "click"}
+{"method": "waits.sleep", "params": {"milliseconds" : 3000}}
+
+//go to list view
+{"params": {"id": "cosmoViewToggleListViewSelector"}, "method": "click"}
+{"method": "waits.forElement", "params": {"id": "listViewQuickItemEntry", "timeout": "40000"}}
+
+//select it
+{"params": {"jsid": "'listView_item' + windmill.testWindow.cosmo.view.list.itemRegistry.getNext().id"}, "method": "click"}
+
+//unstamp event
+{"params": {"id": "detailViewEventButton"}, "method": "click"}
+
+//save it!
+{"params": {"id": "detailViewSaveButton"},  "method": "click"}
+
+{"method": "waits.sleep", "params": {"milliseconds" : 1100}}
+{"params": {"id": "allButtonDialog"}, "method": "click"}

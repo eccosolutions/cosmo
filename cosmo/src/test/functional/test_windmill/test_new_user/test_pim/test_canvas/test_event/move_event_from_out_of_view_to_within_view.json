@@ -1,0 +1,9 @@
+{"method": "click", "params": {"id": "cosmoViewToggleCalViewSelector"}}
+{"method": "waits.forElement", "params": {"id": "hourDiv1-1200", "timeout": "40000"}}
+{"params": {"text": "7\/29\/2007", "id": "goToDateInput"},  "method": "type"}
+{"params": {"jsid": "cosmo.app.pim.layout.baseLayout.mainApp.leftSidebar.minical.goToButton.domNode.id"},  "method": "click"}
+{"params": {"id": "hourDiv1-1100"},  "method": "doubleClick"}
+{"params": {"id": "viewNavCenterRight"},  "method": "click"}
+{"params": {"text": "8\/5\/2007", "id": "detailViewStartDateInput"},  "method": "type"}
+{"params": {"text": "8\/5\/2007", "id": "detailViewEndDateInput"},  "method": "type"}
+{"params": {"id": "detailViewSaveButton"},  "method": "click"}

@@ -1,0 +1,312 @@
+Tests for Cosmo Management Protocol
+
+http://wiki.osafoundation.org/bin/view/Projects/CosmoManagementProtocol
+
+First, bring the framework environment
+
+	>>> from silmut import *
+
+Initialization
+
+    >>> import md5, random, base64
+    >>> accountXML = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <username>test%s</username>
+    ...   <password>%s</password>
+    ...   <firstName>Ex</firstName>
+    ...   <lastName>Ample</lastName>
+    ...   <email>%s@example.com</email>
+    ... </user>"""
+    >>> accountXMLBadNS = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo">
+    ...   <username>test%s</username>
+    ...   <password>%s</password>
+    ...   <firstName>Ex</firstName>
+    ...   <lastName>Ample</lastName>
+    ...   <email>%s@example.com</email>
+    ... </user>"""
+    >>> accountXMLNoNS = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user>
+    ...   <username>test%s</username>
+    ...   <password>%s</password>
+    ...   <firstName>Ex</firstName>
+    ...   <lastName>Ample</lastName>
+    ...   <email>%s@example.com</email>
+    ... </user>"""
+
+
+Protocol Specification
+----------------------
+
+Request Content Headers for PUT Requests
+
+# Commented out until I can figure our why these fail 
+#    >>> h = {'Content-Transfer-Encoding': '1'}
+#    >>> r = request('GET', path, headers=h)
+#    >>> r.status # GET failed because of unhandled headers
+#    501
+#
+#    >>> h = {'Content-Encoding': '1'}
+#    >>> r = request('GET', path, headers=h)
+#    >>> r.status # GET failed because of unhandled headers
+#    501
+#
+#    >>> h = {'Content-Base': '1'}
+#    >>> r = request('GET', path, headers=h)
+#    >>> r.status # GET failed because of unhandled headers
+#    501
+#
+#    >>> h = {'Content-Location': '1'}
+#    >>> r = request('GET', path, headers=h)
+#    >>> r.status # GET failed because of unhandled headers
+#    501
+#
+#    >>> h = {'Content-MD5': '1'}
+#    >>> r = request('GET', path, headers=h)
+#    >>> r.status # GET failed because of unhandled headers
+#    501
+#
+#    >>> h = {'Content-Range': '1'}
+#    >>> r = request('GET', path, headers=h)
+#    >>> r.status # GET failed because of unhandled headers
+#    501
+
+Data Model
+----------
+
+Anonymous Operations
+-------------------------
+
+Signup
+
+    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+    >>> user1 = 'test%s' % randomText
+    >>> password1 = randomText
+    >>> body = accountXML % (randomText, randomText, randomText)
+    >>> r = request('PUT', '%s/cmp/signup' % path, body=body)
+    >>> r.status # PUT signup ok (created)
+    201
+    
+    >>> r = request('PUT', '%s/cmp/signup' % path, body=body)
+    >>> r.status # PUT signup failed (already exists)
+    431
+    
+    Protocol: Authentication and Access Control
+    
+# Commented out because of bug 5238?
+#    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+#    >>> body = accountXML % (randomText, randomText, randomText)
+#    >>> auth = 'Basic %s' % base64.encodestring('%s:%s' % (user1, password1)).strip()
+#    >>> authHeaders = {'Authorization': auth}
+#    >>> r = request('PUT', '%s/cmp/signup' % path, body=body,
+#    ...             headers=authHeaders)
+#    >>> r.status # PUT signup failed (authorization not allowed with anonymous)
+#    403
+
+Operations not allowed when anonymous
+    
+    >>> r = request('GET', '%s/cmp/account' % path)
+    >>> r.status # GET account failed, anonymous mode
+    401
+
+
+Authenticated Operations
+-------------------------
+
+View account
+
+    >>> auth = 'Basic %s' % base64.encodestring('%s:%s' % (user1, password1)).strip()
+    >>> authHeaders = {'Authorization': auth}
+    >>> r = request('GET', '%s/cmp/account' % path, headers=authHeaders)
+    >>> r.status # GET account ok
+    200
+
+Modify account
+
+    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <lastName>Ample</lastName>
+    ... </user>"""
+    >>> r = request('PUT', '%s/cmp/account' % path, body=accountChange,
+    ...             headers=authHeaders)
+    >>> r.status # GET account ok
+    204
+
+    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <username>Ample</username>
+    ... </user>"""
+    >>> r = request('PUT', '%s/cmp/account' % path, body=accountChange,
+    ...             headers=authHeaders)
+    >>> r.status # PUT not allowed, authenticated can not change username
+    400
+
+# Commented out because of bug 5189
+#    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+#    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+#    ...   <LastName1>AmpleSample</LastName1>
+#    ... </user>"""
+#    >>> r = request('PUT', '%s/cmp/account' % path, body=accountChange,
+#    ...             headers=authHeaders)
+#    >>> r.status # PUT not allowed, bad XML
+#    400
+
+    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+    >>> user2 = 'test%s' % randomText
+    >>> user2email = '%s@example.com' % randomText
+    >>> body = accountXML % (randomText, randomText, randomText)
+    >>> r = request('PUT', '%s/cmp/signup' % path, body=body)
+    >>> r.status # PUT signup ok (created)
+    201
+    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <email>%s</email>
+    ... </user>""" % user2email
+    >>> r = request('PUT', '%s/cmp/account' % path, body=accountChange,
+    ...             headers=authHeaders)
+    >>> r.status # PUT not allowed, email exists
+    432
+
+
+Administrative Operations
+-------------------------
+
+List accounts
+
+    >>> auth = 'Basic %s' % base64.encodestring('%s:%s' % (adminuser, adminpassword)).strip()
+    >>> authHeaders = {'Authorization': auth}
+    >>> r = request('GET', '%s/cmp/users' % path, headers=authHeaders)
+    >>> r.status # GET accounts ok
+    200
+
+View account
+
+    >>> r = request('GET', '%s/cmp/user/%s' % (path, user1), headers=authHeaders)
+    >>> r.status # GET account ok
+    200
+
+    >>> r = request('GET', '%s/cmp/user/root' % path, headers=authHeaders)
+    >>> r.status # GET root account ok
+    200
+
+    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+    >>> r = request('GET', '%s/cmp/user/%s' % (path, randomText), headers=authHeaders)
+    >>> r.status # GET no such account
+    404
+
+Create account
+
+    >>> body = accountXML % (randomText, randomText, randomText)
+    >>> user3 = 'test%s' % randomText
+    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user3), body=body,
+    ...             headers=authHeaders)
+    >>> r.status # PUT create account ok
+    201
+
+# Commented out until I can figure out why this fails
+#    >>> body = accountXML % (randomText, randomText, randomText)
+#    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user3), body=body,
+#    ...             headers=authHeaders)
+#    >>> r.status # PUT create account failed, username in use
+#    431
+
+# Commented out until I can figure out why this fails
+#    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+#    >>> body = accountXML % (randomText, randomText, user2email)
+#    >>> r = request('PUT', '%s/cmp/user/test%s' % (path, randomText), body=body,
+#    ...             headers=authHeaders)
+#    >>> r.status # PUT create account failed, email in use
+#    432
+
+    >>> r = request('PUT', '%s/cmp/user/%s' % (path, randomText),
+    ...             body=accountXMLBadNS, headers=authHeaders)
+    >>> r.status # PUT create account failed, bad XML
+    400
+
+Modify account
+
+# Commented out until I can figure out why this fails
+#    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user1), body=accountChange,
+#    ...             headers=authHeaders)
+#    >>> r.status # PUT changed account ok
+#    204
+
+    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <username>test%s</username>
+    ... </user>""" % randomText
+    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user1), body=accountChange,
+    ...             headers=authHeaders)
+    >>> r.status # PUT username changed ok
+    204
+    >>> user1new = 'test%s' % randomText
+    >>> r.getheader('Content-Location') == '%s/cmp/user/%s' % (url, user1new)
+    True
+    >>> r = request('GET', '%s/cmp/user/%s' % (path, user1), headers=authHeaders)
+    >>> r.status # GET account renamed
+    404
+    >>> user1 = user1new
+    >>> r = request('GET', '%s/cmp/user/%s' % (path, user1), headers=authHeaders)
+    >>> r.status # GET account ok
+    200
+
+# Commented out because of bug 5189
+#    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+#    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+#    ...   <LastName1>AmpleSample</LastName1>
+#    ... </user>"""
+#    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user1), body=accountChange,
+#    ...             headers=authHeaders)
+#    >>> r.status # PUT not allowed, bad XML
+#    400
+
+    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <username>%s</username>
+    ... </user>""" % user2
+    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user1), body=accountChange,
+    ...             headers=authHeaders)
+    >>> r.status # PUT not allowed, username exists
+    431
+
+    >>> accountChange = """<?xml version="1.0" encoding="utf-8" ?> 
+    ... <user xmlns="http://osafoundation.org/cosmo/CMP">
+    ...   <email>%s</email>
+    ... </user>""" % user2email
+    >>> r = request('PUT', '%s/cmp/user/%s' % (path, user1), body=accountChange,
+    ...             headers=authHeaders)
+    >>> r.status # PUT not allowed, email exists
+    432
+
+Delete account
+
+    >>> r = request('DELETE', '%s/cmp/user/%s' % (path, user1),
+    ...             headers=authHeaders)
+    >>> r.status # DELETE user ok
+    204
+
+    >>> r = request('DELETE', '%s/cmp/user/root' % path,
+    ...             headers=authHeaders)
+    >>> r.status # DELETE root user failed
+    403
+
+# Commented out until I can figure out why this fails
+#    >>> randomText = md5.md5(str(random.random())).hexdigest()[:16]
+#    >>> r = request('DELETE', '%s/cmp/user/test%s' % (path, randomText),
+#    ...             headers=authHeaders)
+#    >>> r.status # DELETE failed, no such user
+#    403
+
+    
+    Clean up the other created accounts
+    
+    >>> r = request('DELETE', '%s/cmp/user/%s' % (path, user2),
+    ...             headers=authHeaders)
+    >>> r.status # DELETE user ok
+    204
+
+    >>> r = request('DELETE', '%s/cmp/user/%s' % (path, user3),
+    ...             headers=authHeaders)
+    >>> r.status # DELETE user ok
+    204

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+          "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+    Copyright 2007 Open Source Applications Foundation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+<!--
+    Application context containing Spring MVC Beans
+-->
+
+<beans>
+
+<bean id="localeResolver" 
+  class="org.springframework.web.servlet.i18n.CookieLocaleResolver"> 
+    <property name="cookieName">
+        <value>clientlanguage</value>
+    </property> 
+    <!-- in seconds. If set to -1, the cookie is not persisted (deleted when browser shuts down) --> 
+    <property name="cookieMaxAge">
+        <value>100000</value>
+    </property>
+</bean> 
+
+<bean id="localeChangeInterceptor" 
+  class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"> 
+    <property name="paramName">
+        <value>siteLanguage</value>
+    </property> 
+</bean> 
+
+<bean id="exceptionHandler" class="org.osaf.cosmo.ui.ExceptionResolver">
+    <property name="exceptionMappings">
+       <value>
+          org.osaf.cosmo.model.ItemSecurityException=error_forbidden
+          org.osaf.cosmo.security.PermissionDeniedException=error_forbidden
+          org.osaf.cosmo.dao.NoSuchResourceException=error_activated
+          java.lang.Exception=error_exception
+       </value>
+    </property>
+</bean>
+
+<bean id="handlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"> 
+    <property name="interceptors">
+        <list> 
+            <ref bean="localeChangeInterceptor"/> 
+        </list> 
+    </property>   
+    <property name="alwaysUseFullPath">
+        <value>true</value>
+    </property>
+    <property name="mappings"> 
+        <value>
+            /admin/status/*=statusController
+            /login=appEntryController
+            /logout=appEntryController
+            /=appEntryController
+            /welcome=appEntryController
+            /browse/**=accountBrowsingController
+            /i18n.js=i18nController
+            /account/activate=accountActivationController
+            /pim/collection/*=collectionBookmarkController
+            
+            /**/*=jspViewController
+        </value>
+    </property> 
+</bean> 
+
+<!-- TODO set cache settings here.... -->
+<bean id="i18nController" class="org.osaf.cosmo.spring.mvc.InternationalizationController" >
+    <property name="propertyPlaceholderConfigurer">
+        <ref bean="propertyPlaceholderConfigurer"/>
+    </property>
+</bean>
+
+<bean id="jspViewController" class="org.osaf.cosmo.ui.CosmoUrlFilenameViewController"> 
+    <property name="alwaysUseFullPath">
+        <value>true</value>
+    </property>
+</bean> 
+
+<!-- 
+
+    Controller for bookmarkable collection urls
+
+ -->
+ 
+ <bean id="collectionBookmarkController" class="org.osaf.cosmo.ui.pim.CollectionBookmarkController">
+    <property name="pimView"><value>pim</value></property>
+    <property name="contentService"><ref bean="contentService" /></property>
+    <property name="securityManager"><ref bean="securityManager" /></property>
+    <property name="serviceLocatorFactory">
+      <ref bean="serviceLocatorFactory"/>
+    </property>
+    <property name="propertyPlaceholderConfigurer">
+      <ref bean="propertyPlaceholderConfigurer"/>
+    </property>
+ </bean>
+
+<!-- 
+
+    Controller for server status ui 
+    
+-->
+
+<bean id="internalPathMethodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver">
+</bean>
+
+<bean id="statusController" class="org.osaf.cosmo.ui.admin.StatusController">
+    <property name="methodNameResolver"><ref bean="internalPathMethodNameResolver"/></property>
+    <property name="dumpView"><value>admin_status_dump</value></property>
+    <property name="viewView"><value>admin_status_view</value></property>
+    <property name="gcView"><value>redirect:/admin/status/view</value></property>
+</bean>
+
+<!-- Account browser -->
+
+<bean id="accountBrowsingController" class="org.osaf.cosmo.ui.account.AccountBrowsingController">
+  <property name="methodNameResolver"><ref bean="accountBrowsingMethodNameResolver"/></property>
+  <property name="browseCollectionView"><value>browse_collection</value></property>
+  <property name="browseItemView"><value>browse_item</value></property>
+  <property name="browseModificationView"><value>browse_modification</value></property>
+  <property name="eventView"><value>browse_event</value></property>
+  <property name="calendarView"><value>browse_calendar</value></property>
+  <property name="removeViewBase"><value>redirect:/browse</value></property>
+  <property name="revokeTicketBaseView"><value>redirect:/browse</value></property>
+  <property name="contentService"><ref bean="contentService" /></property>
+  <property name="userService"><ref bean="userService" /></property>
+  <property name="securityManager"><ref bean="securityManager" /></property>
+</bean>
+
+<bean id="accountBrowsingMethodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+  <property name="alwaysUseFullPath"><value>true</value></property>
+  <property name="mappings"><value>
+    /browse=browse
+    /browse/remove_subscription=removeSubscription
+    /browse/remove=remove
+    /browse/view=view
+    /browse/download=download
+    /browse/ticket/revoke=revokeTicket
+  </value></property>
+</bean>
+
+<!-- 
+
+    Controller for login, logout, and welcome page
+    
+ -->
+
+<bean id="appEntryController" class="org.osaf.cosmo.ui.ApplicationEntryController"> 
+    <property name="methodNameResolver"><ref bean="appEntryMethodNameResolver"/></property>
+    <property name="loginView" value="login" />
+    <property name="securityManager"><ref bean="securityManager"/></property>
+    <property name="defaultLoggedInRedirect"><value>/pim</value></property>
+    <property name="welcomePageUrl"><value>/welcome</value></property>
+    <property name="userService"><ref bean="userService"/></property>
+    <property name="propertyPlaceholderConfigurer"><ref bean="propertyPlaceholderConfigurer"/></property>
+</bean> 
+
+<bean id="appEntryMethodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver">
+  <property name="alwaysUseFullPath"><value>true</value></property>
+  <property name="mappings">
+  <value>
+    /login=login
+    /logout=logout
+    /welcome=welcome
+    /=root
+  </value>
+  </property>
+</bean>
+
+<!-- 
+
+    Controller for account activation
+
+ -->
+
+<bean id="accountActivationController" 
+      class="org.osaf.cosmo.ui.account.activation.AccountActivationController"> 
+      
+    <property name="accountActivationView" value="account_activate" />
+    <property name="notFoundView" value="error_notfound" />
+    <property name="userService"><ref bean="userService"/></property>
+</bean> 
+
+<!--
+ ********************	
+ 
+    View resolvers
+  
+ ********************
+ -->
+
+
+<bean id="resourceBundleViewResolver" 
+      class="org.springframework.web.servlet.view.ResourceBundleViewResolver"> 
+    <property name="order" value="1"/>
+    <property name="basename" value="views" />
+    <property name="defaultParentView" value="default" />
+</bean> 
+
+<!--
+     
+    Final view resolver.
+
+    This resolver checks for redirect: or forward: prefixes and performs
+    the InternalResourceViewResolver standard behavior if found.
+    
+    If neither is found, it forwards to a pretty "resource not found" page. 
+-->	 
+
+<bean id="defaultViewResolver" 
+      class="org.osaf.cosmo.spring.mvc.views.resolvers.CosmoDefaultViewResolver"> 
+	<property name="notFoundViewResolver"><ref bean="resourceBundleViewResolver"/></property>
+	<property name="notFoundViewName" value="error_notfound"/>
+</bean> 
+
+</beans>

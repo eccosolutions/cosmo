@@ -1,0 +1,158 @@
+#collectionSharingDialog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.cosmoSharingDialog {
+    background: white;
+}
+.cosmoSharingDialogForm {
+    padding: 30px 7px 33px 7px;
+    background: #EDEDED;
+}
+.cosmoSharingTopDiv {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    border-bottom: 1px solid #999999;
+    padding: 2px 5px;
+    background: white;
+}
+#collectionLabelName {
+    font-size: 12px;
+    color: black;
+    padding: 7px 7px 0 7px;
+}
+#addCollectionPrompt {
+    font-size: 10px;
+    font-weight: bold;
+    padding: 0 7px 7px 7px;
+}
+.cosmoSharingDisplayName {
+    font-size: 1.1em;
+    font-weight: bold;
+    float: left;
+    width: 128px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.cosmoSharingHtmlLink{
+    text-decoration: none;
+    float: right;
+    width: 25px;
+}
+h2.cosmoSharingSectionHead {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+.cosmoSubscribeButton{
+    display: block;
+    color: white;
+
+    padding: 0 7px;
+    margin-bottom: 5px;
+    border-color:#CCCCCC rgb(119, 119, 119) rgb(119, 119, 119) rgb(204, 204, 204);
+    border-style:solid;
+    border-width:1px;
+
+    height: 18px;
+    width: 10em;
+    line-height: 18px;
+
+    text-align: center;
+    cursor: pointer;
+    background: url(images/colored_button_bgs.png);
+    background-repeat: repeat-x;
+}
+.cosmoSubscribeButton a:hover{
+    text-decoration: none;
+}
+.cosmoChandlerSubscribeButton {
+    background-position: 0px 0px;
+}
+.cosmoChandlerSubscribeButton:hover {
+    background-position: 0px -18px;
+}
+.cosmoICalSubscribeButton {
+    background-position: 0px -36px;
+}
+.cosmoICalSubscribeButton:hover {
+    background-position: 0px -54px;
+}
+.cosmoAtomSubscribeButton {
+    background-position: 0px -72px;
+}
+.cosmoAtomSubscribeButton:hover {
+    background-position: 0px -90px;
+}
+.cosmoDavSubscribeButton {
+    background-position: 0px -108px;
+}
+.cosmoDavSubscribeButton:hover {
+    background-position: 0px -126px;
+}
+.cosmoInviteButton{
+    margin: 30px 0 0 0;
+    display: block;
+}
+.cosmoSubscriptionCollectionDialog .cosmoInviteButton{
+    display: none;
+}
+.cosmoInviteSection{
+    display: none;
+}
+.cosmoInviteInstructions {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+.cosmoReadOnlyInviteLink {
+    display: block;
+}
+.cosmoReadWriteInviteLink {
+    display: block;
+}
+.cosmoSubscriptionInviteSection{
+    margin-top: 30px;
+}
+.cosmoOwnedCollectionDialog .cosmoSubscriptionInviteSection{
+    display: none;
+}
+.cosmoSubscriptionInviteLink{
+    float: left;
+}
+.cosmoSharingDownloadLink {
+    color: black;
+    text-decoration: none;
+    float: right:
+}
+.cosmoSharingDownloadLink:visited {
+    color: black;
+}
+.cosmoSharingDownloadButton {
+    margin: 30px 0 0 0;
+    display: block;
+}
+.cosmoSharingDeleteButton {
+    margin-top: 30px;
+    display: block;
+}
+.cosmoSharingDoneButton {
+    margin-top: 30px;
+    display: block;
+    position: absolute;
+    left: -2px;
+    right: -3px;
+}
+.cosmoSharingDoneButton .dijitButtonNode{
+    width: 100%
+}
+/* Ticketed dialog styles*/
+.cosmoTicketedSharingDialog {
+    border-top: 1px solid #999999;
+    padding: 7px;
+}
