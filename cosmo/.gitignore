@@ -1,0 +1,2 @@
+# This gets unpacked here by the build... this stuff should get servered from the relevant jars using classloader
+src/main/webapp/js/

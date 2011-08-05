@@ -22,11 +22,11 @@
     xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:security="http://www.springframework.org/schema/security"
     xsi:schemaLocation="
-    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd
-    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
   <bean id="messageSource"
         class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -42,11 +42,13 @@
     <property name="locations">
       <list>
         <ref local="cosmoConfigPath"/>
+        <value>classpath:jdbc.properties</value>
       </list>
     </property>
   </bean>
 
   <!-- resources needed to send mail -->
+<!--
   <jee:jndi-lookup id="mailSession" jndi-name="java:comp/env/mail/cosmo"/>
 
   <bean id="mailSender"
@@ -56,8 +58,174 @@
     </property>
   </bean>
 
-  <!-- resources needed for database access -->
+  - resources needed for database access -
   <jee:jndi-lookup id="jdbcDataSource" jndi-name="java:comp/env/jdbc/cosmo"/>
+-->
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <!-- we currently don't use the email aspects of cosmo -->
+    <!--
+    <property name="session">
+      <ref local="mailSession"/>
+    </property>
+    -->
+  </bean>
+
+	<bean id="jdbcDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<!-- cosmoTest, od, od -->
+		<!-- cosmoNew, cosmo, cosmo -->
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<!-- this needs to be property-fied to be have ?useUnicode=true&characterEncoding=UTF-8 -->
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+
+  <!-- EVENT INTEGRATION -->
+  <!-- for jta atomikos spring integration - see http://www.atomikos.com/Documentation/SpringIntegration#Configuring_Atomikos_as_the_Spri -->
+  <!-- event-integration is registered, and the aspectj-autoproxy picks up the annotations -->
+  <!-- this also requires we set a jta transaction manager - unless the dbases are the same -->
+  <!-- see http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/ch13s03.html#orm-hibernate-tx-strategies -->
+  <!-- now - http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/orm.html#orm-hibernate-tx-strategies -->
+<!--
+  <bean id="eventIntegration" class="com.myeasydiary.cosmo.service.aop.EventIntegrationAdvice">
+	- a high number so it runs inside the transaction and any other cosmo aop - see the class for details -
+  	<property name="order" value="99"/>
+  	<property name="eventService" ref="eventService"/>
+  </bean>
+	<bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager" 
+	    init-method="init" destroy-method="close">
+	   <property name="forceShutdown" value="false"/>
+	</bean>
+	<bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+	   <property name="transactionTimeout" value="300"/>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+	   <property name="transactionManager" ref="atomikosTransactionManager"/>
+	   <property name="userTransaction" ref="atomikosUserTransaction"/>
+	</bean>
+	-
+	<bean id="jdbcDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		- cosmoTest, od, od -
+		- cosmoNew, cosmo, cosmo -
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		- this needs to be property-fied to be have ?useUnicode=true&characterEncoding=UTF-8 -
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/cosmoNew"/>
+		<property name="username" value="cosmo"/>
+		<property name="password" value="cosmo"/>
+	</bean>
+	-
+	<bean id="jdbcDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="uniqueResourceName"><value>cosmodb</value></property>
+		<property name="minPoolSize" value="2"/>
+		<property name="maxPoolSize" value="50"/>
+		<property name="xaDataSourceClassName"><value>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</value></property>
+		<property name="xaProperties">
+			<props>
+				<prop key="user">cosmoprefix</prop>
+				<prop key="password">cosmoprefix</prop>
+				<prop key="url"><![CDATA[jdbc:mysql://localhost:3306/cosmoprefix]]></prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="eventSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="mappingLocations">
+			<list>
+				- look in all classpaths *, not the current one -
+				<value>classpath*:orm/*.hbm.xml</value>
+			</list>
+		</property>
+		<property name="typeDefinitions">
+			<list>
+				<bean class="org.springframework.orm.hibernate3.TypeDefinitionBean">
+					<property name="typeName" value="joda-DateTime"/>
+					<property name="typeClass" value="com.myeasydiary.dom.CustomHibernateDateTimeUserType"/>
+				</bean>
+				<bean class="org.springframework.orm.hibernate3.TypeDefinitionBean">
+					<property name="typeName" value="joda-DateTimeZone"/>
+					<property name="typeClass" value="com.myeasydiary.dom.CustomHibernateDateTimeZoneUserType"/>
+				</bean>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
+				<prop key="hibernate.max_fetch_depth">3</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.bytecode.use_reflection_optimizer">false</prop>
+			</props>
+		</property>
+		<property name="dataSource">
+			<ref bean="eventDataSource"/>
+		</property>
+	</bean>
+	<bean id="eventDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		<property name="uniqueResourceName"><value>eventdb</value></property>
+		<property name="minPoolSize" value="2"/>
+		<property name="maxPoolSize" value="50"/>
+		<property name="xaDataSourceClassName"><value>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</value></property>
+		<property name="xaProperties">
+			<props>
+				<prop key="user">med</prop>
+				<prop key="password">my3asydiary</prop>
+				<prop key="url"><![CDATA[jdbc:mysql://localhost:3306/med]]></prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="eventViewDao" class="com.myeasydiary.dao.EventViewDaoHibernate">
+		<property name="entityClassName" value="Event"/>
+		<property name="sessionFactory"><ref bean="eventSessionFactory"/></property>
+	</bean>
+	<bean id="eventDao" class="com.myeasydiary.dao.EntityDaoHibernate">
+		<property name="entityView" ref="eventViewDao"/>
+		<property name="sessionFactory" ref="eventSessionFactory"/>
+	</bean>
+	<bean id="contactViewDao" class="com.myeasydiary.dao.ContactViewDaoHibernate">
+		<property name="entityClassName" value="Contact"/>
+		<property name="sessionFactory"><ref bean="eventSessionFactory"/></property>
+	</bean>
+	<bean id="contactDao" class="com.myeasydiary.dao.ContactDaoHibernate">
+		<property name="entityView" ref="contactViewDao"/>
+		<property name="sessionFactory"><ref bean="eventSessionFactory"/></property>
+	</bean>
+	<bean id="contactService" class="com.myeasydiary.service.ContactServiceImpl">
+		<property name="contactDao"><ref bean="contactDao"/></property>
+		<property name="entityClassName" value="Contact"/>
+	</bean>
+	<bean id="taskDao" class="com.myeasydiary.dao.TaskDaoMix">
+		<property name="sessionFactory" ref="eventSessionFactory"/>
+	</bean>
+	<bean id="taskService" class="com.myeasydiary.service.tasks.TaskServiceImpl">
+		<property name="taskDao"><ref bean="taskDao"/></property>
+		- we don't need all properties as we are not sending reminders -
+		-
+		<property name="eventService"><ref bean="eventService"/></property>
+		<property name="contactService"><ref bean="contactService"/></property>
+		<property name="smsProviderServiceClickATell"><ref bean="smsProviderServiceClickATellTarget"/></property>
+		<property name="emailProviderService"><ref bean="emailProviderServiceTarget"/></property>
+		<property name="emailMimeProviderService"><ref bean="emailProviderServiceTarget"/></property>
+		<property name="emailAvailable" value="${email.available}"/>
+		-
+	</bean>
+	<bean id="eventServiceHolder" class="com.myeasydiary.service.EventServiceHolder">
+		<property name="taskService" ref="taskService"/>
+	</bean>
+	- existing tx definition should cover our 'set' methods -
+	<bean id="eventService" class="com.myeasydiary.service.EventServiceImpl">
+		<property name="contactService"><ref bean="contactService"/></property>
+		<property name="entityDao"><ref bean="eventDao"/></property>
+		<property name="entityClassName" value="Event"/>
+	</bean>
+-->
+	<!-- EVENT INTEGRATION -->
+
+
+<!--
+  	<property name="eventService" ref="eventService"/>
+  </bean>
+  <bean id="eventService" class="com.myeasydiary.service.EventServiceImpl">
+  	<property name=""></property>
+  </bean>
+-->
 
   <bean id="defaultLobHandler"
         class="org.osaf.cosmo.hibernate.CosmoLobHandler">
@@ -232,12 +400,16 @@
   
   <!-- Transaction manager for a single Hibernate SessionFactory
        (alternative to JTA) -->
-  <bean id="transactionManager"
-        class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  <!-- we set jta for the cosmo-events-integration -->
+  <!--
+  <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+	-->
+  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
     <property name="sessionFactory">
       <ref local="sessionFactory" />
     </property>
   </bean>
+
   
   <!--  AOP Configuration -->
   
@@ -263,7 +435,7 @@
   
   <!-- required for aspectj annotations support -->
   <aop:aspectj-autoproxy/>
-  
+
   <!--  Monitors all service calls (ContentService for now) and
         logs all calls that aren't secured by advice in SecurityAdvice 
    -->
@@ -397,8 +569,11 @@
       <ref local="standardItemFilterProcessor" />
     </property>
   </bean>
-	
+
   <!-- services -->
+
+  <bean id="timeZoneDefault" class="org.osaf.cosmo.TimeZoneDefault"/>
+
   <bean id="passwordGenerator"
         class="org.apache.commons.id.random.SessionIdGenerator"/>
 
@@ -417,7 +592,7 @@
         <value>${cosmo.service.account.requireActivation}</value>
     </property>
   </bean>
-  
+
   <bean id="passwordRecoverer"
           class="org.osaf.cosmo.service.account.EmailPasswordRecoverer">
           
@@ -461,7 +636,7 @@
     <property name="userDao" ref="userDao"/>
     <property name="passwordGenerator" ref="passwordGenerator"/>
   </bean>
-	
+
   <bean id="contentLockManager"
         class="org.osaf.cosmo.service.lock.SingleVMLockManager"/>
 
@@ -679,7 +854,8 @@
     <property name="serverPropertyService" ref="serverPropertyService"/>
     <property name="localSessionFactory" ref="&amp;sessionFactory"/>
     <property name="dataSource" ref="jdbcDataSource"/>
-    <property name="validateSchema" value="true"/>
+	<!-- set to false since our production server generates different schema -->
+    <property name="validateSchema" value="false"/>
     <property name="rootLoginUrl" value="/account/view"/>
     <property name="entityFactory" ref="cosmoEntityFactory"/>
   </bean>

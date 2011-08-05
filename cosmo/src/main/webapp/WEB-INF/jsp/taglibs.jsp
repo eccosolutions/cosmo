@@ -24,5 +24,9 @@
 
 <%@ taglib uri="http://www.springframework.org/security/tags" 
     prefix="security"   %>
-<%@ taglib uri="http://osafoundation.org/cosmo/jsp/core"  prefix="cosmoui"%>
+<%--
+<%@ taglib uri="http://osafoundation.org/cosmo/jsp/core"  prefix="cosmoui"
+--%>
+<%@ taglib uri="/WEB-INF/cosmo.tld"  prefix="cosmoui"%>
+
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>

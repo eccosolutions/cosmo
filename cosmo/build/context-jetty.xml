@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
+
+<!-- copied from tomcat entry in build/context.xml -->
+<!-- see http://docs.codehaus.org/display/JETTY/DataSource+Examples -->
+<!-- this is a jetty-env file - http://docs.codehaus.org/display/JETTY/jetty-env.xml -->
+
+<Configure class="org.mortbay.jetty.webapp.WebAppContext">
+
+	<New id="tx" class="org.mortbay.jetty.plus.naming.Transaction">
+	  <Arg>
+	   	<!-- <New class="com.atomikos.icatch.jta.J2eeUserTransaction"/> -->
+		<!-- atomikos suggests above due to shutdown problems - http://www.atomikos.com/Documentation/KnownProblems#Spring_s_MessageListenerCont_AN1 -->
+	    <!-- <New class="com.atomikos.icatch.jta.UserTransactionImp"/> -->
+	   	<New class="com.atomikos.icatch.jta.J2eeUserTransaction"/>
+	  </Arg>
+	</New>
+
+	<New id="cosmoDb" class="org.mortbay.jetty.plus.naming.Resource">
+     <Arg></Arg>
+     <Arg>jdbc/cosmo</Arg>
+     <Arg>
+      <New class="com.atomikos.jdbc.AtomikosDataSourceBean">
+       <Set name="minPoolSize">2</Set>
+       <Set name="maxPoolSize">50</Set>
+       <Set name="xaDataSourceClassName">com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</Set>
+       <Set name="UniqueResourceName">cosmoDb</Set>
+       <Get name="xaProperties">
+         <Call name="setProperty">
+           <Arg>url</Arg>
+           <Arg>jdbc:mysql://localhost:3306/cosmoNew</Arg>
+           <!-- ?useUnicode=true&characterEncoding=UTF-8 -->
+         </Call>
+         <Call name="setProperty">
+           <Arg>user</Arg>
+           <Arg>cosmo</Arg>
+         </Call>
+         <Call name="setProperty">
+           <Arg>password</Arg>
+           <Arg>cosmo</Arg>
+         </Call>
+       </Get>
+      </New>
+     </Arg>
+   </New>
+
+	<New id="medDb" class="org.mortbay.jetty.plus.naming.Resource">
+     <Arg></Arg>
+     <Arg>jdbc/med</Arg>
+     <Arg>
+      <New class="com.atomikos.jdbc.AtomikosDataSourceBean">
+       <Set name="minPoolSize">2</Set>
+       <Set name="maxPoolSize">50</Set>
+       <Set name="xaDataSourceClassName">com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</Set>
+       <Set name="UniqueResourceName">medDb</Set>
+       <Get name="xaProperties">
+         <Call name="setProperty">
+           <Arg>url</Arg>
+           <Arg>jdbc:mysql://localhost:3306/med</Arg>
+           <!-- ?useUnicode=true&characterEncoding=UTF-8 -->
+         </Call>
+         <Call name="setProperty">
+           <Arg>user</Arg>
+           <Arg>med</Arg>
+         </Call>
+         <Call name="setProperty">
+           <Arg>password</Arg>
+           <Arg>my3asydiary</Arg>
+         </Call>
+       </Get>
+      </New>
+     </Arg>
+   </New>
+
+</Configure>
