@@ -164,11 +164,11 @@ public class EntityConverterTest extends TestCase {
         // should be master and 2 mods
         Assert.assertEquals(3, items.size());
         
-        mod = findModByRecurrenceId(items, "20060104T190000Z");
+        mod = findModNotesByRecurrenceId(items, "20060104T190000Z");
         Assert.assertNotNull(mod);
         Assert.assertEquals("event 6 mod 1 changed", mod.getDisplayName());
         
-        mod = findModByRecurrenceId(items, "20060105T190000Z");
+        mod = findModNotesByRecurrenceId(items, "20060105T190000Z");
         Assert.assertNotNull(mod);
         Assert.assertEquals("event 6 mod 2", mod.getDisplayName());
         
@@ -179,11 +179,11 @@ public class EntityConverterTest extends TestCase {
         // should be master and 1 active mod/ 1 deleted mod
         Assert.assertEquals(3, items.size());
         
-        mod = findModByRecurrenceId(items, "20060104T190000Z");
+        mod = findModNotesByRecurrenceId(items, "20060104T190000Z");
         Assert.assertNotNull(mod);
         Assert.assertFalse(mod.getIsActive().booleanValue());
         
-        mod = findModByRecurrenceId(items, "20060105T190000Z");
+        mod = findModNotesByRecurrenceId(items, "20060105T190000Z");
         Assert.assertNotNull(mod);
         Assert.assertEquals("event 6 mod 2 changed", mod.getDisplayName());
         
@@ -583,7 +583,7 @@ public class EntityConverterTest extends TestCase {
         return null;
     }
     
-    private NoteItem findModByRecurrenceId(Set<NoteItem> items, String rid) {
+    private NoteItem findModNotesByRecurrenceId(Set<NoteItem> items, String rid) {
         for(NoteItem note: items)
             if(note.getModifies()!=null && note.getUid().contains(rid))
                 return note;
