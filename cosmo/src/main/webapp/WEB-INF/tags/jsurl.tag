@@ -27,5 +27,7 @@
         type="org.osaf.cosmo.CosmoConstants"
         field="PRODUCT_VERSION"/>
 
-<c:set var="result"
-       value="${baseUrl}/js-${PRODUCT_VERSION}"/>
+<%--
+<c:set var="result" value="${baseUrl}/js-${PRODUCT_VERSION}"/>
+--%>
+<c:set var="result" value="${baseUrl}/js"/>
