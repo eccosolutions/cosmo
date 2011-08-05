@@ -23,14 +23,35 @@ import java.sql.Types;
 import org.hibernate.HibernateException;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.type.BooleanType;
+import org.hibernate.type.descriptor.java.BooleanTypeDescriptor;
+import org.hibernate.type.descriptor.sql.SmallIntTypeDescriptor;
+import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
 
 /**
  * Custom hibernate type that persists a java boolean
  * to an integer field.
  *
  */
+/**
+ * A type that maps between {@link java.sql.Types#SMALLINT} and {@link Boolean}
+ */
 public class BooleanIntegerType extends BooleanType {
 
+	public static final BooleanIntegerType INSTANCE = new BooleanIntegerType();
+
+	public BooleanIntegerType() {
+		this( SmallIntTypeDescriptor.INSTANCE, BooleanTypeDescriptor.INSTANCE );
+	}
+	protected BooleanIntegerType(SqlTypeDescriptor sqlTypeDescriptor, BooleanTypeDescriptor javaTypeDescriptor) {
+		super( sqlTypeDescriptor, javaTypeDescriptor );
+	}
+
+	public String getName() {
+		return "integer_boolean";
+	}
+
+}
+/* hibernate pre 3.6 version
     @Override
     public Object get(ResultSet rs, String name) throws SQLException {
         Integer code = rs.getInt(name);
@@ -73,5 +94,4 @@ public class BooleanIntegerType extends BooleanType {
     private int toInt(Object value) {
         return ((Boolean) value).booleanValue() ? 1 : 0;
     }
-    
-}
+*/    
