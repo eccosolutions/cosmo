@@ -6,3 +6,7 @@ The tags and branches have not been imported, hence the visibility of releases b
 
 However, the point at which this file is getting created represents the 1.2.0 release tag, and is tagged in git as such.
 
+
+A useful resource may also be:
+http://github.com/travis/cosmo
+http://github.com/ashanan/cosmo
