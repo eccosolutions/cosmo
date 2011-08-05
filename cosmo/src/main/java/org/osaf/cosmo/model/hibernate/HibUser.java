@@ -44,7 +44,7 @@ import org.osaf.cosmo.model.User;
  * Hibernate persistent User.
  */
 @Entity
-@Table(name="users")
+@Table(name="cosmo_users")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class HibUser extends HibAuditableObject implements User {
 
@@ -57,7 +57,8 @@ public class HibUser extends HibAuditableObject implements User {
     public static final int USERNAME_LEN_MIN = 3;
     /**
      */
-    public static final int USERNAME_LEN_MAX = 32;
+    //public static final int USERNAME_LEN_MAX = 32;
+    public static final int USERNAME_LEN_MAX = 50;
    
     /**
      */
@@ -137,12 +138,12 @@ public class HibUser extends HibAuditableObject implements User {
     @OneToMany(targetEntity=HibPreference.class, mappedBy = "user", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.ALL, CascadeType.DELETE_ORPHAN })
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Preference> preferences = new HashSet<Preference>(0);
+    private final Set<Preference> preferences = new HashSet<Preference>(0);
     
     @OneToMany(targetEntity=HibCollectionSubscription.class, mappedBy = "owner", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.ALL, CascadeType.DELETE_ORPHAN }) 
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<CollectionSubscription> subscriptions = 
+    private final Set<CollectionSubscription> subscriptions = 
         new HashSet<CollectionSubscription>(0);
 
     /**

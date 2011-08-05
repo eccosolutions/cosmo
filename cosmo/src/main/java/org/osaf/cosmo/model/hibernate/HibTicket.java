@@ -44,7 +44,7 @@ import org.osaf.cosmo.model.User;
  * Hibernate persistent Ticket.
  */
 @Entity
-@Table(name="tickets")
+@Table(name="cosmo_tickets")
 public class HibTicket extends HibAuditableObject implements Comparable<Ticket>, Ticket {
 
     /**
@@ -63,7 +63,7 @@ public class HibTicket extends HibAuditableObject implements Comparable<Ticket>,
     
     @CollectionOfElements
     @JoinTable(
-            name="ticket_privilege",
+            name="cosmo_ticket_privilege",
             joinColumns = @JoinColumn(name="ticketid")
     )
     @Fetch(FetchMode.JOIN)
