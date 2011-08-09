@@ -1,0 +1,7 @@
+*/target/
+*/bin/
+.svn
+.settings/
+.classpath
+.project
+# cosmo/src/main/webapp/js/*
