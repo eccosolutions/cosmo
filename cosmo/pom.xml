@@ -32,6 +32,7 @@
 	<!-- was war, but for us at the moment, a jar is appropriate -->
 	<name>Cosmo</name>
 	<version>1.3.0-SNAPSHOT</version>
+	<packaging>war</packaging>
 	
 	<properties>
 		<jackrabbit.version>1.0-osaf-20061023</jackrabbit.version>
