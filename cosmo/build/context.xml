@@ -24,7 +24,7 @@
         o "classpath:cosmo.properties" - specifies a classpath location
           (deployer must add the properties file to the classpath manually)
   -->
-  <Environment name="cosmo/config" value="file:etc/cosmo.properties"
+  <Environment name="cosmo/config" value="classpath:cosmo.properties"
                type="java.lang.String" override="false" />
 
   <!-- Storage configuration
@@ -36,10 +36,12 @@
   -->
 
 	<!-- Derby -->
+	<!--
 	<Resource name="jdbc/cosmo" type="javax.sql.DataSource" maxActive="100"
 	          maxIdle="30" maxWait="10000" username="sa" password=""
 		        driverClassName="org.apache.derby.jdbc.EmbeddedDriver"
 		        url="jdbc:derby:db;create=true" />
+	-->
 
 	<!-- MySQL -->
   <!--
