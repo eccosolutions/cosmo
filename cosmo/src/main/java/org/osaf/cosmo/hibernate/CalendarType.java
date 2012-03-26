@@ -122,12 +122,13 @@ public class CalendarType implements CompositeUserType {
 
     public void nullSafeSet(PreparedStatement st, Object obj, int index,
             SessionImplementor arg3) throws HibernateException, SQLException {
-        
+
+    	// for hibernate 36 we simply passed the sessionImplementor back in as the last argument (except the last - since the object is typed)
         if(obj==null) {
-            Hibernate.CALENDAR.nullSafeSet(st, obj, index);
-            Hibernate.TIMEZONE.nullSafeSet(st, obj, index+1);
+            Hibernate.CALENDAR.nullSafeSet(st, obj, index, arg3);
+            Hibernate.TIMEZONE.nullSafeSet(st, obj, index+1, arg3);
         } else {
-            Hibernate.CALENDAR.nullSafeSet(st, obj, index);
+            Hibernate.CALENDAR.nullSafeSet(st, obj, index, arg3);
             Hibernate.TIMEZONE.nullSafeSet(st, ((Calendar) obj).getTimeZone(), index+1);
         }
     }
