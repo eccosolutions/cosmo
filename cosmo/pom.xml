@@ -40,10 +40,6 @@
 	</properties>
 	
 	<repositories>
-		<repository>
-			<id>atomikos</id>
-			<url>http://repo.atomikos.com</url>
-		</repository>
 		<!-- hibernate -->
 		<repository>
 			<id>nexus-jboss</id>
