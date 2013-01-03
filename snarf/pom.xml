@@ -14,7 +14,8 @@
    limitations under the License.
 -->
 
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.osaf.cosmo</groupId>
         <artifactId>osaf-server</artifactId>
@@ -80,7 +81,7 @@
 <!--                    <filters>
                             <filter>${basedir}/config/snarf.properties</filter>
                         </filters> -->
-                        <finalName>osaf-server-bundle-${pom.version}</finalName>
+                        <finalName>osaf-server-bundle-${project.version}</finalName>
                         <outputDirectory>dist</outputDirectory>
                         <workDirectory>${basedir}/target/assembly/work</workDirectory>
                         <appendAssemblyId>False</appendAssemblyId>
