@@ -109,11 +109,11 @@
             <archive>http://lists.osafoundation.org/pipermail/cosmo-dev/</archive>
         </mailingList>
     </mailingLists>
-    <scm>
-        <connection>scm:svn:http://svn.osafoundation.org/server/cosmo/</connection>
-        <developerConnection>scm:svn:svn+ssh://svn.osafoundation.org/svn/server/cosmo/</developerConnection>
-        <url>http://svn.osafoundation.org/server/cosmo/</url>
-    </scm>
+	<scm>
+		<url>http://github.com/adamjhamer/cosmo</url>
+		<connection>scm:git:git@github.com:adamjhamer/cosmo.git</connection>
+		<developerConnection>scm:git:git@github.com:adamjhamer/cosmo.git</developerConnection>
+	</scm>
     <modules>
         <module>cosmo</module>
         <module>migration</module>
@@ -329,4 +329,39 @@
             </plugins>
         </pluginManagement>
     </build>
+	<profiles>
+		<profile>
+			<id>central</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>sonatype-nexus-snapshots</id>
+					<name>Sonatype Nexus Snapshots</name>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+				<repository>
+					<id>sonatype-nexus-staging</id>
+					<name>Nexus Release Repository</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
+
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+    </profiles>
 </project>

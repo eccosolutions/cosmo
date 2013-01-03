@@ -10,3 +10,13 @@ However, the point at which this file is getting created represents the 1.2.0 re
 A useful resource may also be:
 http://github.com/travis/cosmo
 http://github.com/ashanan/cosmo
+
+
+Release Instructions:
+----------------------
+
+We are now releasing to Maven Central under org.eccosolutions.org.osaf groupId.
+
+Release instructions are comparable to those found at https://github.com/whirlwind-match/fuzzydb/wiki/Release-Instructions
+
+(feel free to copy the relevant bits in)
