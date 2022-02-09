@@ -420,7 +420,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>3.6.1.Final</version>
+			<version>5.4.24.Final</version>
 			<exclusions>
 				<!-- brings in some old version -->
 				<exclusion>
